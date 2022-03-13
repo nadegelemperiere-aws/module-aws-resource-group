@@ -39,7 +39,7 @@ Getting Started
 Prerequisites
 -------------
 
-To date, terraform aws provider does not provide resources to handle AWS SSO Admin. SSO Admin shall have been manually activated in the account and the SSO groups shall have been created.
+N.A.
 
 Configuration
 -------------
@@ -48,7 +48,7 @@ To use this module in a wider terraform deployment, add the module to a terrafor
 
 .. code:: terraform
 
-    module "group" {
+    module "rgroup" {
 
         source      = "git::https://github.com/technogix-terraform/module-aws-resource-group?ref=<this module version>"
         project     = the project to which the permission set belongs to be used in naming and tags
@@ -56,26 +56,6 @@ To use this module in a wider terraform deployment, add the module to a terrafor
         email       = the email of the person responsible for the permission set maintainance
         environment = the type of environment to which the permission set contributes (prod, preprod, staging, sandbox, ...) to be used in naming and tags
         git_version = the version of the deployment that uses the permission sets to be used as tag
-        account     = the identifier of the account in which the permission set shall be created
-        group       = {
-            name     = *group name to give to the permission set related resources
-            id       = group identifier in AWS SSO
-            console  = Console url to which the group user shall be redirected after login to the SSO portal
-        }
-        rights      = [
-            {
-                description = description to give to the statement
-                actions     = [ list of actions to allow the group users to do in AWS console
-                    "s3:ListAllMyBuckets"
-                ]
-                resources   = [ list of resources to which permission applies
-                    "*"
-                ]
-            }
-        ]
-        managed       = [ list of managed policies to give to user
-            "arn:aws:iam::aws:policy/AWSSupportAccess",...
-        ]
     }
 
 Usage
@@ -92,22 +72,13 @@ The module is deployed alongside the module other terraform components, using th
 Detailed design
 ===============
 
-.. image:: docs/imgs/module.png
-   :alt: Module architecture
-
-Module creates a permission set in the local organization and attach it to the provided SSO group identifier, resulting in the creation of a dedicated role for group.
-
-It creates a custom policy to gives the required rights to the SSO group in the local organization.
-
-It can also attach already existing AWS managed policies
-
+The artifact is just a resource group filtering resources by project, environment and module
 
 Testing
 =======
 
 Tested With
 -----------
-
 
 .. image:: https://img.shields.io/static/v1?label=technogix_iac_keywords&message=v1.0.0&color=informational
    :target: https://github.com/technogix-terraform/robotframework
@@ -138,12 +109,10 @@ Tests can be executed in an environment :
 Strategy
 --------
 
-The test strategy consists in terraforming test infrastructures based on the permission set module and check that the resulting AWS infrastructure matches what is expected.
-The tests currently contains 2 tests :
+The test strategy consists in terraforming test infrastructures based on the resource group module and check that the resulting AWS infrastructure matches what is expected.
+The tests currently contains 1 test :
 
-1 - A test to check the capability to create a permission set with some rights
-
-2 - A test to check that when no permissions are specified, the permission set can still be created
+1 - A test to check the capability to create a resource group and add the right resources into it
 
 The tests cases :
 
@@ -151,7 +120,7 @@ The tests cases :
 
 * Use specific keywords to model the expected infrastructure in the boto3 format.
 
-* Use shared SSO keywords relying on boto3 to check that the boto3 input matches the expected infrastructure
+* Use shared EC2 keywords based on boto3 to check that the boto3 input matches the expected infrastructure
 
 NB : It is not possible to completely specify the expected infrastructure, since some of the value returned by boto are not known before apply. The comparaison functions checks that all the specified data keys are present in the output, leaving alone the other undefined keys.
 
