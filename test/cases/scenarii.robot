@@ -17,21 +17,23 @@ Library         technogix_iac_keywords.terraform
 Library         technogix_iac_keywords.keepass
 Library         technogix_iac_keywords.resourcegroup
 Library         ../keywords/data.py
+Library         OperatingSystem
 
 *** Variables ***
 ${KEEPASS_DATABASE}                 ${vault_database}
-${KEEPASS_KEY}                      ${vault_key}
-${KEEPASS_GOD_KEY_ENTRY}            /engineering-environment/aws/aws-god-access-key
+${KEEPASS_KEY_ENV}                  ${vault_key_env}
+${KEEPASS_PRINCIPAL_KEY_ENTRY}      /engineering-environment/aws/aws-principal-access-key
 ${KEEPASS_ID_ENTRY}                 /engineering-environment/aws/aws-sso-sysadmin-group-id
 ${REGION}                           eu-west-1
 
 *** Test Cases ***
 Prepare environment
-    [Documentation]         Retrieve god credential from database and initialize python tests keywords
-    ${god_access}               Load Keepass Database Secret            ${KEEPASS_DATABASE}     ${KEEPASS_KEY}  ${KEEPASS_GOD_KEY_ENTRY}            username
-    ${god_secret}               Load Keepass Database Secret            ${KEEPASS_DATABASE}     ${KEEPASS_KEY}  ${KEEPASS_GOD_KEY_ENTRY}            password
-    Initialize Terraform        ${REGION}   ${god_access}   ${god_secret}
-    Initialize Resource Group   None        ${god_access}   ${god_secret}    ${REGION}
+    [Documentation]         Retrieve principal credential from database and initialize python tests keywords
+    ${keepass_key}              Get Environment Variable          ${KEEPASS_KEY_ENV}
+    ${principal_access}         Load Keepass Database Secret      ${KEEPASS_DATABASE}     ${keepass_key}  ${KEEPASS_PRINCIPAL_KEY_ENTRY}            username
+    ${principal_secret}         Load Keepass Database Secret      ${KEEPASS_DATABASE}     ${keepass_key}  ${KEEPASS_PRINCIPAL_KEY_ENTRY}            password
+    Initialize Terraform        ${REGION}   ${principal_access}   ${principal_secret}
+    Initialize Resource Group   None        ${principal_access}   ${principal_secret}    ${REGION}
 
 Create Standard Permissions
     [Documentation]         Create Standard Resource Group
