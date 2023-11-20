@@ -1,8 +1,6 @@
 #!/bin/bash
 # -------------------------------------------------------
-# TECHNOGIX
-# -------------------------------------------------------
-# Copyright (c) [2022] Technogix SARL
+# Copyright (c) [2022] Nadege Lemperiere
 # All rights reserved
 # -------------------------------------------------------
 # Module to deploy an aws bucket with all the secure
@@ -31,6 +29,7 @@ do
 done
 
 # Install required python packages
+pip install $scriptpath/../../robotframework
 pip install --quiet -r $scriptpath/../requirements-test.txt
 
 # Launch python scripts to setup terraform environment
