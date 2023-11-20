@@ -1,7 +1,5 @@
 # -------------------------------------------------------
-# TECHNOGIX
-# -------------------------------------------------------
-# Copyright (c) [2021] Technogix.io
+# Copyright (c) [2021] Nadege Lemperiere
 # All rights reserved
 # -------------------------------------------------------
 # Module to deploy the resource group structure
@@ -12,4 +10,4 @@
 
 output "group" {
 	value = aws_resourcegroups_group.topic_env_network.arn
-} 
+}
