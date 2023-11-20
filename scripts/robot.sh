@@ -29,7 +29,6 @@ do
 done
 
 # Install required python packages
-pip install $scriptpath/../../robotframework
 pip install --quiet -r $scriptpath/../requirements-test.txt
 
 # Launch python scripts to setup terraform environment
